@@ -1,0 +1,14 @@
+main {
+    background-image: url('../asserts/FUNDO.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.iconeDoc{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+}
