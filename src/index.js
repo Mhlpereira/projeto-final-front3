@@ -121,7 +121,7 @@ async function searchCharacters() {
       characterCard.classList.add("col-md-6");
       characterCard.classList.add("cartoes");
       characterCard.innerHTML += `
-      <div class="card bg-btn-br text-white shadow-lg  mb-5" style="width: 19rem"
+      <div class="card bg-btn-br text-white mb-5" style="width: 19rem"
       data-bs-toggle="modal" data-bs-target="#staticBackdrop"
       onclick="modal(${character.id})">
           <figure>
