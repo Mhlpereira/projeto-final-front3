@@ -34,7 +34,7 @@
 }
 
 body {
-    background-image: url(/asserts/FUNDO.jpg);
+    background-image: url(./assets/FUNDO.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
