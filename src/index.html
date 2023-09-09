@@ -25,7 +25,7 @@
               <input type="text" placeholder="Pesquisar personagens..." id="searchInput">
                 <button id="searchButton" style="background: transparent; border: none;"  onclick="searchCharacters()"></button>                     
             </div>
-            <div id="suggestions" class="d-flex justify-content-center"></div>
+            <!-- <ul id="suggestions"></ul> -->
         </div>
     </div>  
       <div class="modal fade"  id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -48,12 +48,18 @@
       </div>
 
       <div class="contadores">
-        <span class="contador-titulo">Characters:</span>
-        <span class="contador-numero" id="personagem"></span>
-        <span class="contador-titulo">Locations:</span>
-        <span class="contador-numero" id="local"></span>
-        <span class="contador-titulo">Episodes:</span>
-        <span class="contador-numero" id="eps"></span>
+          <div class="contadores-conteudo">
+            <span class="contador-titulo">Characters:</span>
+            <span class="contador-numero" id="personagem"></span>
+          </div>
+          <div class="contadores-conteudo">
+            <span class="contador-titulo">Locations:</span>
+            <span class="contador-numero" id="local"></span>
+          </div>
+          <div class="contadores-conteudo">
+            <span class="contador-titulo">Episodes:</span>
+            <span class="contador-numero" id="eps"></span>
+          </div>
         </div>
     
     </main>

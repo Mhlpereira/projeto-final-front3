@@ -45,7 +45,7 @@ async function dados() {
       card.classList.add("cartoes");
 
       card.innerHTML = `
-        <div class="card bg-btn-br text-white shadow-lg  mb-5" style="width: 19rem"
+        <div class="card bg-btn-br text-white mb-5" style="width: 19rem"
              data-bs-toggle="modal" data-bs-target="#staticBackdrop"
              onclick="modal(${character.id})">
           <figure>
@@ -138,38 +138,6 @@ async function searchCharacters() {
   }
 }
 
-async function updateSuggestions() {
-  const searchText = searchInput.value.trim();
-
-  if (searchText.length === 0) {
-    suggestionsDiv.innerHTML = "";
-    return;
-  }
-
-  try {
-    const response = await axios.get(
-      `https://rickandmortyapi.com/api/character/?name=${searchText}`
-    );
-    const characters = response.data.results;
-
-    suggestionsDiv.innerHTML = "";
-
-    for (let i = 0; i < characters.length; i++) {
-      const character = characters[i];
-      const suggestion = document.createElement("div");
-      suggestion.textContent = character.name;
-      suggestion.classList.add("suggestion");
-      suggestion.addEventListener("click", () => {
-        // Quando uma sugestão é clicada, preenche o campo de entrada com o nome da sugestão e esvazia as sugestões
-        searchInput.value = character.name;
-        suggestionsDiv.innerHTML = "";
-      });
-      suggestionsDiv.appendChild(suggestion);
-    }
-  } catch (error) {
-    console.error("Ocorreu um erro:", error);
-  }
-}
 
 function debounce(func, delay) {
   let timer;
