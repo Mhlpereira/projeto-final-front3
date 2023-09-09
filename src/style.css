@@ -33,15 +33,6 @@
     margin-bottom: 1%;
 }
 
-#suggestions{
-    position: absolute;
-    background-color: #fff;
-    max-height: 100rem;
-    overflow-y: auto;
-    width: 15%;
-    z-index: 1000;
-}
-
 body {
     background-image: url(/asserts/FUNDO.jpg);
     background-size: cover;

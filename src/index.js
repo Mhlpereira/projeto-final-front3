@@ -13,7 +13,6 @@ const totalEpisodes = document.querySelector("#eps");
 dados();
 contador();
 
-searchInput.addEventListener("input", debounce(updateSuggestions, 300)); // Usando debounce para evitar chamadas excessivas à API
 searchInput.addEventListener("input", searchCharacters);
 
 async function buscarNomeUltimoEpisodio(url) {
@@ -136,15 +135,6 @@ async function searchCharacters() {
   } catch (error) {
     console.error("Ocorreu um erro:", error);
   }
-}
-
-
-function debounce(func, delay) {
-  let timer;
-  return function () {
-    clearTimeout(timer);
-    timer = setTimeout(func, delay);
-  };
 }
 
 async function contador() {
