@@ -1,5 +1,9 @@
 var paginaAtual = 1;
-const pageSize = 8;
+
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
+const resultsContainer = document.getElementById("results-container");
+const suggestionsDiv = document.getElementById("suggestions");
 const btnProximo = document.querySelector("#btnProximo");
 const btnAnterior = document.querySelector("#btnAnterior");
 const data = document.querySelector("#data");
@@ -8,6 +12,9 @@ const totalLocations = document.querySelector("#local");
 const totalEpisodes = document.querySelector("#eps");
 dados();
 contador();
+
+searchInput.addEventListener("input", debounce(updateSuggestions, 300)); // Usando debounce para evitar chamadas excessivas à API
+searchInput.addEventListener("input", searchCharacters);
 
 async function buscarNomeUltimoEpisodio(url) {
   try {
@@ -23,62 +30,163 @@ async function buscarNomeUltimoEpisodio(url) {
 
 async function dados() {
   try {
-    axios
-      .get(`https://rickandmortyapi.com/api/character/?page=${paginaAtual}`)
-      .then(async (result) => {
-        data.innerHTML = "";
-        result.data.results.forEach(async (personagens) => {
-          let provaDeVida = "";
+    const result = await axios.get(
+      `https://rickandmortyapi.com/api/character/?page=${paginaAtual}`
+    );
+    const characters = result.data.results;
 
-          if (personagens.status == "Alive") {
-            provaDeVida = "alive";
-          } else if (personagens.status == "Dead") {
-            provaDeVida = "dead";
-          } else {
-            provaDeVida = "unknown";
-          }
+    data.innerHTML = "";
 
-          const ultimoEpisodio = await buscarNomeUltimoEpisodio(
-            personagens.episode[personagens.episode.length - 1]
-          );
-          data.innerHTML += `<div class="card">
-                <figure>
-                <img class="avatar" src="${personagens.image}" alt="${personagens.name}">
-                </figure>
-                <aside class="bio">
-                <span class="titulo-card">
-                <h2>${personagens.name}</h2>
-                </span>
-                <div class="status">
-                <p style="margin-top: 15px;">
-                <span class="status-indicator ${provaDeVida}"></span>
-                 ${personagens.status} - ${personagens.species}
-                </p>
-                </div>
-                <p class="txt-cima"><span>Last Known Location:</span></p>
-                <p class="txt-baixo">${personagens.location.name}</p>
-                <p class="txt-cima"><span>Last seen:</span></p>
-                <p class="txt-baixo">${ultimoEpisodio}</p>       
-                </aside>
-                <div>
-            `;
-        });
+    for (let i = 0; i < characters.length; i++) {
+      const character = characters[i];
 
-        
-        verificarPagina(result.data.info.pages);
-      });
+      const card = document.createElement("div");
+      card.classList.add("col-md-6");
+      card.classList.add("cartoes");
+
+      card.innerHTML = `
+        <div class="card bg-btn-br text-white shadow-lg  mb-5" style="width: 19rem"
+             data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+             onclick="modal(${character.id})">
+          <figure>
+            <img class="avatar" src="${character.image}" alt="${character.name}">
+          </figure>
+          <h2 class="cartoes-nome">${character.name}</h2>
+        </div>
+      `;
+
+      data.appendChild(card);
+    }
+
+    verificarPagina(result.data.info.pages);
   } catch (error) {
     console.error("Erro ao carregar os personagens:", error);
   }
 }
 
+async function modal(id) {
+  try {
+    const response = await axios.get(
+      `https://rickandmortyapi.com/api/character/${id}`
+    );
+    const character = response.data;
+    const modalContent = document.getElementById("modal-content");
+    const ultimoEpisodio = await buscarNomeUltimoEpisodio(
+      character.episode[character.episode.length - 1]
+    );
+    let provaDeVida = "";
+
+    if (character.status == "Alive") {
+      provaDeVida = "alive";
+    } else if (character.status == "Dead") {
+      provaDeVida = "dead";
+    } else {
+      provaDeVida = "unknown";
+    }
+
+    modalContent.innerHTML = `
+      <div class="modal-body">
+        <img src="${character.image}" alt="" class="img-fluid rounded-circle">
+        <div class="text-center">
+          <h1 class="text-white">${character.name}</h1>
+          <span class="status-indicator ${provaDeVida}"></span>
+          <span class="text-white">${provaDeVida}</span>
+          <h6 class="text-white">${character.species}</h6>
+          <h6 class="text-white">${character.gender}</h6>
+          <h6 class="text-white">${character.origin.name}</h6>
+          <h6 class="text-white">${character.location.name}</h6>
+        </div>
+      </div>`;
+  } catch (error) {
+    console.error("Erro ao obter detalhes do personagem:", error);
+  }
+}
+
+async function searchCharacters() {
+  const searchText = searchInput.value.trim();
+
+  try {
+    const response = await axios.get(
+      `https://rickandmortyapi.com/api/character/?name=${searchText}`
+    );
+    const characters = response.data.results;
+    console.log(searchText);
+
+    data.innerHTML = "";
+
+    for (let x = 0; x < characters.length; x++) {
+      const character = characters[x];
+
+      console.log("entrou");
+      const characterCard = document.createElement("div");
+      characterCard.classList.add("col-md-6");
+      characterCard.classList.add("cartoes");
+      characterCard.innerHTML += `
+      <div class="card bg-btn-br text-white shadow-lg  mb-5" style="width: 19rem"
+      data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+      onclick="modal(${character.id})">
+          <figure>
+            <img class="avatar" src="${character.image}" alt="${character.name}">
+          </figure>
+      <h2 class="cartoes-nome">${character.name}</h2>
+      </div>
+      `;
+      data.appendChild(characterCard);
+    }
+  } catch (error) {
+    console.error("Ocorreu um erro:", error);
+  }
+}
+
+async function updateSuggestions() {
+  const searchText = searchInput.value.trim();
+
+  if (searchText.length === 0) {
+    suggestionsDiv.innerHTML = "";
+    return;
+  }
+
+  try {
+    const response = await axios.get(
+      `https://rickandmortyapi.com/api/character/?name=${searchText}`
+    );
+    const characters = response.data.results;
+
+    suggestionsDiv.innerHTML = "";
+
+    for (let i = 0; i < characters.length; i++) {
+      const character = characters[i];
+      const suggestion = document.createElement("div");
+      suggestion.textContent = character.name;
+      suggestion.classList.add("suggestion");
+      suggestion.addEventListener("click", () => {
+        // Quando uma sugestão é clicada, preenche o campo de entrada com o nome da sugestão e esvazia as sugestões
+        searchInput.value = character.name;
+        suggestionsDiv.innerHTML = "";
+      });
+      suggestionsDiv.appendChild(suggestion);
+    }
+  } catch (error) {
+    console.error("Ocorreu um erro:", error);
+  }
+}
+
+function debounce(func, delay) {
+  let timer;
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(func, delay);
+  };
+}
+
 async function contador() {
   try {
-    const [charactersResponse, locationsResponse, episodesResponse] = await Promise.all([
-      axios.get(`https://rickandmortyapi.com/api/character/`),
-      axios.get(`https://rickandmortyapi.com/api/location`),
-      axios.get(`https://rickandmortyapi.com/api/episode`)
-    ]);
+    const [charactersResponse, locationsResponse, episodesResponse] =
+      await Promise.all([
+        axios.get(`https://rickandmortyapi.com/api/character/`),
+        axios.get(`https://rickandmortyapi.com/api/location`),
+        axios.get(`https://rickandmortyapi.com/api/episode`),
+      ]);
 
     const contadorP = charactersResponse.data.info.count;
     const contadorL = locationsResponse.data.info.count;
@@ -95,7 +203,6 @@ async function contador() {
 function scrollToTop() {
   window.scrollTo(0, 0);
 }
-
 
 function verificarPagina(totalDePaginas) {
   if (paginaAtual == 1) {

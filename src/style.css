@@ -1,14 +1,64 @@
-main {
-    background-image: url('../asserts/FUNDO.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+.topo{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
 }
 
-.iconeDoc{
-    position: fixed;
+.iconeDoc {
+    margin-right: 10px;
     top: 20px;
     left: 20px;
     width: 40px;
     height: 40px;
+}
+
+.topo-titulo{
+    flex-grow: 1;
+    text-align: center;
+}
+
+#suggestions{
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 20%;
+    z-index: 1000;
+}
+
+main {
+    background-color: beige;
+}
+
+.cartoes {
+    display: flex;
+    justify-content: center;
+}
+
+.cartoes-nome {
+    color: black;
+    text-align: center;
+}
+
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.status-indicator.alive {
+    background-color: #39ff14;
+}
+
+.status-indicator.dead {
+    background-color: red;
+}
+
+.status-indicator.unknown {
+    background-color: grey;
 }

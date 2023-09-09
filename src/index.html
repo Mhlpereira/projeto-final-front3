@@ -13,20 +13,49 @@
     <title>Rick and Morty API</title>
   </head>
   <body>
-    <header class="container-fluid">
-      <div class="row">
+    <header class="topo">
         <a href="https://rickandmortyapi.com/documentation"
           ><img class="iconeDoc" src="../asserts/RICK_MORTY_ICON-01.svg"
         /></a>
-        <h1>API de Rick and Morty</h1>
-      </div>
+        <h1 class="topo-titulo">API de Rick and Morty</h1>
     </header>
     <main>
-      <div class="container" >
-        <div class="row" id="data">
-          
+      <div class="row d-flex justify-content-center ">
+            <div id="search" class="d-flex justify-content-center">
+              <input type="text" placeholder="Pesquisar personagens..." id="searchInput">
+                <button id="searchButton" style="background: transparent; border: none;"  onclick="searchCharacters()"></button>                     
+            </div>
+            <div id="suggestions" class="d-flex justify-content-center"></div>
+        </div>
+    </div>  
+      <div class="modal fade"  id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true" data-bs-dismiss="modal" aria-label="Close">
+        <div class="modal-dialog card-modal" >
+          <div class="modal-content text-center  bg-dark " id="modal-content">
+                
+          </div>
         </div>
       </div>
+      <div class="container" >
+        <div class="row" id="data">
+      
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button id="btnAnterior" class="btn" onclick="anterior()">Previous</button>
+        <button id="btnProximo" class="btn" onclick="proximo()">Next</button>
+      </div>
+
+      <div class="contadores">
+        <span class="contador-titulo">Characters:</span>
+        <span class="contador-numero" id="personagem"></span>
+        <span class="contador-titulo">Locations:</span>
+        <span class="contador-numero" id="local"></span>
+        <span class="contador-titulo">Episodes:</span>
+        <span class="contador-numero" id="eps"></span>
+        </div>
+    
     </main>
     <footer>
         <div class="container-fluid">
